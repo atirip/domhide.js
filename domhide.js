@@ -7,7 +7,6 @@
 
 (function(window, APP) {
 	// deep means replacing node innards with <!-- innerHTML -->
-	// to turn off set delfi.has.deepHide = false;
 	var	deep = true
 	,	escapeContent = true
 	,	esc = window.escape
