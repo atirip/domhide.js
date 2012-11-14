@@ -17,7 +17,7 @@ As a semaphore, attribute data-domhide="W,H" is also added to the hidden tag. Th
 
 ## Usage:
 
-**Include bodyscrollkiller.js:**
+**Include domhide.js:**
 
     <script src="path/to/domhide.js" type="text/javascript"></script>
 
