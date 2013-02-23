@@ -1,9 +1,10 @@
-/*jshint laxcomma:true, laxbreak: true, asi:true */
-/*
-* MIT Licensed
-* Copyright (c) 2012, Priit Pirita, atirip@yahoo.com
-* https://github.com/atirip/domhide.js
-*/
+/* jshint laxcomma:true, laxbreak: true, asi:true */
+
+/* @preserve
+ * MIT Licensed
+ * Copyright (c) 2012, Priit Pirita, atirip@yahoo.com
+ * https://github.com/atirip/domhide.js
+ */
 
 (function(window, APP) {
 	// deep means replacing node innards with <!-- innerHTML -->
@@ -27,9 +28,7 @@
 		}
 
 	,	hideNode = function(node, dp, e) {
-			var contents
-			,	child
-			,	width
+			var width
 			,	height
 			,	style
 			,	rect
@@ -55,10 +54,8 @@
 					setAttr( node, attrPref, width + ',' + height )
 					width && (node.style.width = width)
 					height && (node.style.height = height)
-					contents = (undefined === e ? escapeContent : e) ? esc(node.innerHTML) : node.innerHTML
-					// removeChild here is VERY-VERY slow compared to all other DOM manipulations in domhide.js
-					while(child=node.firstChild) node.removeChild(child)
-					node.appendChild( doc.createComment(contents) )
+					// of all tests so far, this one is the fastest
+					node.innerHTML = '<!--' + ( (undefined === e ? escapeContent : e) ? esc(node.innerHTML) : node.innerHTML ) + '-->'
 				}
 			} else {
 				if( 'hidden' !== node.style.visibility ) {
@@ -69,8 +66,7 @@
 		}
 
 	,	revealNode = function(node, dp, e) {
-			var content
-			,	attr
+			var attr
 	
 			if ( dp = (undefined === dp ? deep : dp) ) {
 				dp = ( attr = getAttr(node, attrPref) )
@@ -79,9 +75,8 @@
 			if ( dp ) {
 				removeAttr(node, attrPref)
 				if ( 2 === (attr = attr.split(",")).length ) {
-					content = (undefined === e ? escapeContent : e) ? unesc(node.firstChild.nodeValue) : node.firstChild.nodeValue
-					while(node.firstChild) node.removeChild(node.firstChild)
-					node.insertAdjacentHTML('afterbegin', content)
+					// of all tests so far, this one is the fastest
+					node.innerHTML = (undefined === e ? escapeContent : e) ? unesc(node.firstChild.nodeValue) : node.firstChild.nodeValue;
 					0 !== +attr[0] && (node.style.width = '')
 					0 !== +attr[1] && (node.style.height = '')
 				}
@@ -119,7 +114,7 @@
 	}
 	
 	// export
-	APP.hiddenNode = hiddenNode
+	APP['hiddenNode'] = hiddenNode
 	APP.hideNode = hideNode
 	APP.revealNode = revealNode
 
