@@ -6,10 +6,16 @@
  * https://github.com/atirip/domhide.js
  */
 
-(function(window, APP) {
+(function() {
+
 	// deep means replacing node innards with <!-- innerHTML -->
 	var	deep = true
 	,	escapeContent = true
+	,	window = this
+
+	,	exports
+	,	module = 'domhide'
+
 	,	esc = window.escape
 	,	unesc = window.unescape
 	,	doc = window.document
@@ -31,6 +37,7 @@
 			var width
 			,	height
 			,	style
+			,	comment
 			,	rect
 	
 			if ( dp = (undefined === dp ? deep : dp) ) {
@@ -40,22 +47,22 @@
 
 			if ( dp ) {
 				if ( !getAttr(node, attrPref) ) {
-					// check if needed props are set inline
 					width = -1 !== node.style.cssText.indexOf('width') ? 0 : (style ? style.getPropertyValue('width') : node.currentStyle.width)
 					height = -1 !== node.style.cssText.indexOf('height') ? 0 : (style ? style.getPropertyValue('height') : node.currentStyle.height)
 
-					// if IE returns anything but pixels
-					if ( !style && ( !~width.indexOf('px') || !~height.indexOf('px') ) ) {
+					// if anything but pixels
+					if ( (width && !~width.indexOf('px')) || (height && !~height.indexOf('px')) ) {
 						rect = node.getBoundingClientRect()
-						width = (rect.right - rect.left) + 'px'
-						height = (rect.bottom - rect.top) + 'px'
+						width && (width = (rect.right - rect.left) + 'px')
+						height && (height = (rect.bottom - rect.top) + 'px')
 					}
-
 					setAttr( node, attrPref, width + ',' + height )
 					width && (node.style.width = width)
 					height && (node.style.height = height)
 					// of all tests so far, this one is the fastest
-					node.innerHTML = '<!--' + ( (undefined === e ? escapeContent : e) ? esc(node.innerHTML) : node.innerHTML ) + '-->'
+					comment = doc.createComment( (undefined === e ? escapeContent : e) ? esc(node.innerHTML) : node.innerHTML )
+					node.innerHTML = ''
+					node.appendChild( comment )
 				}
 			} else {
 				if( 'hidden' !== node.style.visibility ) {
@@ -88,6 +95,11 @@
 			}
 		}
 
+	,	removeAttribute = function(node) {
+			removeAttr(node, attrPref)
+		}
+
+
 	// cross-browser set/get attribute
 	div.setAttribute("data-test", "t")
 	if ( div.getAttribute("data-test") !== "t" ) {
@@ -114,9 +126,19 @@
 	}
 	
 	// export
-	APP['hiddenNode'] = hiddenNode
-	APP.hideNode = hideNode
-	APP.revealNode = revealNode
+	exports = {
+		removeData: removeAttribute,
+		hiddenNode: hiddenNode,
+		hideNode: hideNode,
+		revealNode: revealNode
+	}
 
+	if (typeof define === 'function' && define.amd) {
+		define(module, function() {
+			return exports
+		})
+	} else {
+		this[module] = exports
+	}
 
-})(window, (window.atirip || (window.atirip = {}) ));
+}).call(this);
