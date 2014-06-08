@@ -1,64 +1,58 @@
 <!doctype html>
 <html>
-<head>
-	<style>
-		* {
-			padding: 0;
-			margin: 0;
-			border: 0;
-			position: relative;
-			border: 0;
-		}
+<title>domhide demo</title>
+<style>
+	* {
+		padding: 0;
+		margin: 0;
+		border: 0;
+		position: relative;
+		border: 0;
+	}
 
-		#hide {
-			display: block;
-			width: 600px;
-			height: 600px;
-			margin: 0 auto;
-			cursor: pointer;
-			background: #00FF00;
-		}
+	#hide {
+		display: block;
+		width: 600px;
+		height: 600px;
+		margin: 0 auto;
+		cursor: pointer;
+		background: #00FF00;
+	}
 
-		.bg {
-			width: 600px;
-			height: 600px;
-			background-image: -webkit-gradient(linear, left top, left bottom, from(#FF0000), to(#0000FF));
-			background-image: -webkit-linear-gradient(top, #FF0000, #0000FF);
-			background-image:    -moz-linear-gradient(top, #FF0000, #0000FF);
-			background-image:      -o-linear-gradient(top, #FF0000, #0000FF);
-			background-image:         linear-gradient(to bottom, #FF0000, #0000FF);
-			filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#FF0000, endColorstr=#0000FF);
-			-ms-filter: "progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#FF0000, endColorstr=#0000FF)";
-		}
-	</style>
-</head>
+	.bg {
+		width: 600px;
+		height: 600px;
+		background-image: -webkit-gradient(linear, left top, left bottom, from(#FF0000), to(#0000FF));
+		background-image: -webkit-linear-gradient(top, #FF0000, #0000FF);
+		background-image:    -moz-linear-gradient(top, #FF0000, #0000FF);
+		background-image:      -o-linear-gradient(top, #FF0000, #0000FF);
+		background-image:         linear-gradient(to bottom, #FF0000, #0000FF);
+		filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#FF0000, endColorstr=#0000FF);
+		-ms-filter: "progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#FF0000, endColorstr=#0000FF)";
+	}
+	p {
+		font: normal 16px/1.5 sans-serif;
+		padding: 10px;
+	}
+</style>
 <body>
+	<p>Click once to hide, click again to reavel. Inspect DOM to see what happens.
 	<div id=hide>
-		<!-- comment -->
 		<div class=bg></div>
 	</div>
 
 	<script src=domhide-min.js></script>
 	<script>
 
-		atirip.bind = function(type, handler, element) {
-			element = element || document.documentElement
-			if ( element.addEventListener ) {
-				element.addEventListener( type, handler, false)
-			} else {
-				if( element.attachEvent ) {
-					element.attachEvent('on' + type, handler)
-				}
+		function listener (n, f, h, c) {
+			var l = f + 'EventListener'
+			return function s(e) {
+				window[l] ? n[l](e, h, !!c) : n[ ('add' == f ? 'at' : 'de') + 'tachEvent' ]('on' + e, h)
+				return s
 			}
 		}
-
-		var node = document.getElementById('hide');
-
-		atirip.bind('click', function() {
-				atirip.hiddenNode(node) ? atirip.revealNode(node) : atirip.hideNode(node)
-			},
-			node
-		)
+		var node = document.getElementById('hide')
+		listener(document.getElementById('hide'), 'add', function() {
+			domhide.hiddenNode(node) ? domhide.revealNode(node) : domhide.hideNode(node)
+		})('click')
 	</script>
-</body>
-</html>
