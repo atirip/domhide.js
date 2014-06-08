@@ -81,7 +81,7 @@ You can prehide tag's at the back-end, it is advisable to do so when content is 
 
 ## Demo
 
-Simple demo [https://raw.github.com/atirip/domhide.js/master/hide.html](https://raw.github.com/atirip/domhide.js/master/hide.html)  
+Simple [demo](http://atirip.github.io/domhide.js/hide.html)  
 Click once to hide, click again to reavel. Inspect DOM to see what happens.
 
 ## Compatible
