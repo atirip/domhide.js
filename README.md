@@ -23,9 +23,9 @@ As a semaphore, attribute data-domhide="W,H" is also added to the hidden tag. Th
 
 **Available methods**
 
-	atirip.hiddenNode(node);
-	atirip.hideNode(node, deep, escape);
-	atirip.revealNode(node, deep, escape);
+	hiddenNode(node);
+	hideNode(node, deep, escape);
+	revealNode(node, deep, escape);
 
 Where:  
 __node__ is single, pure vanilla Javascript DOM Node ( or in jQuery something like $('foo')[0] )  
